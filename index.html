@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" sizes="180x180" type="image/png" href="favicon.png">
+  <title>আত্মশুদ্ধি</title>
+  <style>
+    /* Background with gradient overlay */
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #a8e6cf, #dcedc1);
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .background {
+      background-image: url('favicon.png');
+      background-size: 200px 200px;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.1;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+    }
+
+    /* Header Title */
+    h1 {
+      font-size: 3rem;
+      color: #e63946;
+      text-align: center;
+      margin: 40px 10px 20px 10px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Navbar */
+    .topnav {
+      background-color: #ffffffcc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      border-radius: 10px;
+      margin: 0 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: #264653;
+      text-align: center;
+      padding: 12px 18px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background-color: #2a9d8f;
+      color: white;
+    }
+
+    .nav-links a.active {
+      background-color: #e76f51;
+      color: white;
+    }
+
+    /* Hamburger icon for mobile */
+    .icon {
+      display: none;
+      font-size: 28px;
+      cursor: pointer;
+      user-select: none;
+      padding: 12px;
+    }
+
+    /* Mobile view */
+    @media (max-width: 768px) {
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+
+      .nav-links.show {
+        max-height: 500px; /* enough space for links */
+      }
+
+      .topnav {
+        margin: 10px;
+      }
+
+      .icon {
+        display: block;
+      }
+
+      .nav-links a {
+        text-align: left;
+        padding: 12px 20px;
+        margin: 2px 0;
+      }
+    }
+
+    /* Smooth scroll effect */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+
+  <h1>আত্মশুদ্ধি</h1>
+
+  <div class="topnav">
+    <span class="icon" id="menuBtn" onclick="toggleMenu()">☰</span>
+    <div class="nav-links" id="menu">
+      <a class="active" href="#">হোম</a>
+      <a href="member.html">সদস্যবৃন্দ</a>
+      <a href="memory.html">আমাদের স্মৃতি</a>
+      <a href="about.html">আত্মশুদ্ধি সম্পর্কে</a>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      let menu = document.getElementById("menu");
+      let btn = document.getElementById("menuBtn");
+      menu.classList.toggle("show");
+      btn.textContent = menu.classList.contains("show") ? "✖" : "☰";
+    }
+  </script>
+</body>
+</html>

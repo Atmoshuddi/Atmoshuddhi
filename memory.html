@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" sizes="180x180" type="image/png" href="favicon.png">
+    <title>আমাদের স্মৃতি</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #d4edda, #a8e6cf);
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #e63946;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            color: #2a9d8f;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #ffffffcc; /* semi-transparent white */
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            padding: 30px 20px;
+            width: 250px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card a {
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #264653;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 2rem;
+            }
+            h3 {
+                font-size: 1.3rem;
+            }
+            .card {
+                width: 45%;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.6rem;
+            }
+            h3 {
+                font-size: 1.1rem;
+            }
+            .card {
+                width: 80%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>আমাদের স্মৃতি</h2>
+        <h3>আমাদের কিছু স্মৃতি এখানে তুলে ধরা হলো।</h3>
+
+        <div class="card-container">
+            <div class="card">
+                <a href="https://drive.google.com/drive/folders/1kId6RopYdZjk3sRiCNCvcetn3QKmjcVy?usp=drive_link" target="_blank">
+                    ভিডিও
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://drive.google.com/drive/folders/1ZfvZ0rj_AJrDzjJsrSPGNIGkAqSsegQy?usp=drive_link" target="_blank">
+                    ছবি
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

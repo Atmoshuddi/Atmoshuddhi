@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সদস্যবৃন্দ</title>
+    <link rel="icon" sizes="180x180" type="image/png" href="favicon.png">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom right, #dcedc1, #a8e6cf);
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 3rem;
+            color: #e63946;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Grid layout for members */
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .member-card {
+            background: rgba(255,255,255,0.9);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .member-card a {
+            text-decoration: none;
+            color: #264653;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .member-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 2.2rem;
+            }
+            .member-card a {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.8rem;
+            }
+            .member-card a {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>সদস্যবৃন্দ</h2>
+        <div class="member-grid">
+            <div class="member-card"><a href="Shahin.html">Nahidul Islam Shahin</a></div>
+            <div class="member-card"><a href="Sowrov.html">Shohrah Uddin Sowrov</a></div>
+            <div class="member-card"><a href="Sohag.html">Zahedul Amin Sohag</a></div>
+            <div class="member-card"><a href="Mojib.html">Mojibul Alam</a></div>
+            <div class="member-card"><a href="Amor.html">Jahir Amor</a></div>
+            <div class="member-card"><a href="Naim.html">Abu Arif Naim</a></div>
+            <div class="member-card"><a href="Tipu.html">Nahidul Islam Tipu</a></div>
+            <div class="member-card"><a href="Mofiz.html">Mofiz Alam</a></div>
+            <div class="member-card"><a href="Rumi.html">Jalal Uddin Rumi</a></div>
+            <div class="member-card"><a href="Shaker.html">Shaker Alam</a></div>
+            <div class="member-card"><a href="Mahbub.html">Mahbubul Alam</a></div>
+            <div class="member-card"><a href="Nezam.html">Nezam Uddin</a></div>
+        </div>
+    </div>
+</body>
+</html>

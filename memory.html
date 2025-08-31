@@ -125,32 +125,58 @@
         </div>
     </div>
 
-    <script>
-        const videoURL = "https://drive.google.com/drive/folders/1kId6RopYdZjk3sRiCNCvcetn3QKmjcVy?usp=drive_link";
+   <script type="module">
+  // Import Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-        function openLogin() {
-            document.getElementById("loginModal").style.display = "flex";
-        }
+  // ✅ Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyC63JYlboedK6hE_u4ubAT0Nm2PIo-ygQk",
+    authDomain: "atmoshuddi.firebaseapp.com",
+    projectId: "atmoshuddi",
+    storageBucket: "atmoshuddi.firebasestorage.app",
+    messagingSenderId: "540869594984",
+    appId: "1:540869594984:web:667a69b95b6edd983ed0dd",
+    measurementId: "G-X9HQ1DN4P7"
+  };
 
-        function closeLogin() {
-            document.getElementById("loginModal").style.display = "none";
-        }
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-        function checkLogin() {
-            const user = document.getElementById("username").value;
-            const pass = document.getElementById("password").value;
+  // Track which member page was clicked
+  let targetPage = "";
 
-            // 🔑 Change credentials here
-            const validUser = "atmoshuddi";
-            const validPass = "@NSZMJA@";
+  // Open login modal
+  function openLogin(page) {
+    targetPage = page;
+    document.getElementById("loginModal").style.display = "flex";
+  }
+  window.openLogin = openLogin;
 
-            if (user === validUser && pass === validPass) {
-                window.open(videoURL, "_blank");
-                closeLogin();
-            } else {
-                alert("❌ Wrong username or password!");
-            }
-        }
-    </script>
+  // Close modal
+  function closeLogin() {
+    document.getElementById("loginModal").style.display = "none";
+  }
+  window.closeLogin = closeLogin;
+
+  // Handle login
+  function checkLogin() {
+    const email = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // ✅ Login successful
+        window.location.href = targetPage;
+      })
+      .catch((error) => {
+        alert("❌ Wrong username or password!");
+      });
+  }
+  window.checkLogin = checkLogin;
+</script>
 </body>
 </html>
+

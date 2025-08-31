@@ -86,6 +86,9 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        button.cancel {
+            background: red;
+        }
     </style>
 </head>
 <body>
@@ -95,7 +98,7 @@
             <div class="member-card"><a onclick="openLogin('Shahin.html')">Nahidul Islam Shahin</a></div>
             <div class="member-card"><a onclick="openLogin('Sowrov.html')">Shohrah Uddin Sowrov</a></div>
             <div class="member-card"><a onclick="openLogin('Sohag.html')">Zahedul Amin Sohag</a></div>
-             <div class="member-card"><a href="">Ziabul</a></div>
+            <div class="member-card"><a onclick="openLogin('Ziabul.html')">Ziabul</a></div>
             <div class="member-card"><a onclick="openLogin('Mojib.html')">Mojibul Alam</a></div>
             <div class="member-card"><a onclick="openLogin('Amor.html')">Jahir Amor</a></div>
             <div class="member-card"><a onclick="openLogin('Naim.html')">Abu Arif Naim</a></div>
@@ -112,66 +115,65 @@
     <div id="loginModal">
         <div id="loginBox">
             <h3>Login Required</h3>
-            <input type="text" id="username" placeholder="Username"><br>
+            <input type="email" id="username" placeholder="Email"><br>
             <input type="password" id="password" placeholder="Password"><br>
             <button onclick="checkLogin()">Login</button>
             <br><br>
-            <button onclick="closeLogin()" style="background:red;">Cancel</button>
+            <button onclick="closeLogin()" class="cancel">Cancel</button>
         </div>
     </div>
 
     <script type="module">
-  // Import Firebase
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  // ✅ Your Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyC63JYlboedK6hE_u4ubAT0Nm2PIo-ygQk",
-    authDomain: "atmoshuddi.firebaseapp.com",
-    projectId: "atmoshuddi",
-    storageBucket: "atmoshuddi.firebasestorage.app",
-    messagingSenderId: "540869594984",
-    appId: "1:540869594984:web:667a69b95b6edd983ed0dd",
-    measurementId: "G-X9HQ1DN4P7"
-  };
+        // ✅ Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyC63JYlboedK6hE_u4ubAT0Nm2PIo-ygQk",
+            authDomain: "atmoshuddi.firebaseapp.com",
+            projectId: "atmoshuddi",
+            storageBucket: "atmoshuddi.firebasestorage.app",
+            messagingSenderId: "540869594984",
+            appId: "1:540869594984:web:667a69b95b6edd983ed0dd",
+            measurementId: "G-X9HQ1DN4P7"
+        };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
-  // Track which member page was clicked
-  let targetPage = "";
+        // Track target page
+        let targetPage = "";
 
-  // Open login modal
-  function openLogin(page) {
-    targetPage = page;
-    document.getElementById("loginModal").style.display = "flex";
-  }
-  window.openLogin = openLogin;
+        // Show login modal
+        function openLogin(page) {
+            targetPage = page;
+            document.getElementById("loginModal").style.display = "flex";
+        }
+        window.openLogin = openLogin;
 
-  // Close modal
-  function closeLogin() {
-    document.getElementById("loginModal").style.display = "none";
-  }
-  window.closeLogin = closeLogin;
+        // Close modal
+        function closeLogin() {
+            document.getElementById("loginModal").style.display = "none";
+        }
+        window.closeLogin = closeLogin;
 
-  // Handle login
-  function checkLogin() {
-    const email = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+        // Login check
+        function checkLogin() {
+            const email = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // ✅ Login successful
-        window.location.href = targetPage;
-      })
-      .catch((error) => {
-        alert("❌ Wrong username or password!");
-      });
-  }
-  window.checkLogin = checkLogin;
-</script>
-
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // ✅ Success
+                    window.location.href = targetPage;
+                })
+                .catch((error) => {
+                    alert("❌ Wrong username or password!");
+                });
+        }
+        window.checkLogin = checkLogin;
+    </script>
 </body>
 </html>

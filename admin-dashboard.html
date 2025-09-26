@@ -60,6 +60,59 @@ members.forEach(m => {
 
 let selectedUID = null;
 
+// Drag & Drop ফাংশন
+let draggedRow = null;
+function makeRowsDraggable() {
+  const rows = tableBody.querySelectorAll("tr");
+  rows.forEach(row => {
+    row.setAttribute("draggable", true);
+
+    row.addEventListener("dragstart", () => {
+      draggedRow = row;
+      row.classList.add("dragging");
+    });
+
+    row.addEventListener("dragend", () => {
+      draggedRow = null;
+      row.classList.remove("dragging");
+    });
+
+    row.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      const bounding = row.getBoundingClientRect();
+      const offset = e.clientY - bounding.top;
+      if(offset > bounding.height / 2){
+        row.style["border-bottom"] = "3px solid blue";
+        row.style["border-top"] = "";
+      } else {
+        row.style["border-top"] = "3px solid blue";
+        row.style["border-bottom"] = "";
+      }
+    });
+
+    row.addEventListener("dragleave", () => {
+      row.style["border-bottom"] = "";
+      row.style["border-top"] = "";
+    });
+
+    row.addEventListener("drop", (e) => {
+      e.preventDefault();
+      row.style["border-bottom"] = "";
+      row.style["border-top"] = "";
+
+      if(draggedRow !== row){
+        const bounding = row.getBoundingClientRect();
+        const offset = e.clientY - bounding.top;
+        if(offset > bounding.height / 2){
+          row.after(draggedRow);
+        } else {
+          row.before(draggedRow);
+        }
+      }
+    });
+  });
+}
+
 // Load contributions for selected member
 memberSelect.addEventListener("change", async () => {
   tableBody.innerHTML = "";
@@ -87,7 +140,7 @@ memberSelect.addEventListener("change", async () => {
       delBtn.style.border="none";
       delBtn.style.borderRadius="4px";
       delBtn.style.cursor="pointer";
-      delBtn.addEventListener("click", async ()=>{
+      delBtn.addEventListener("click", async ()=> {
         if(confirm("⚠ আপনি কি নিশ্চিত ডিলিট করতে চান?")){
           await updateDoc(memberDoc,{ contributions: arrayRemove(item) });
           tr.remove();
@@ -101,6 +154,9 @@ memberSelect.addEventListener("change", async () => {
 
       tableBody.appendChild(tr);
     });
+
+    // ডাটা লোড হওয়ার পর drag সক্রিয়
+    makeRowsDraggable();
   }
 });
 
@@ -118,6 +174,23 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
   document.getElementById("amount").value="";
   memberSelect.dispatchEvent(new Event("change")); // refresh table
 });
+
+// নতুন ক্রম Firestore এ সেভ
+document.getElementById("saveOrderBtn").addEventListener("click", async () => {
+  if(!selectedUID) return alert("⚠ মেম্বার সিলেক্ট করুন!");
+
+  const rows = tableBody.querySelectorAll("tr");
+  const newOrder = [];
+  rows.forEach(r => {
+    const month = r.children[0].textContent;
+    const amount = parseInt(r.children[1].textContent);
+    newOrder.push({month, amount});
+  });
+
+  const memberDoc = doc(db, "members", selectedUID);
+  await updateDoc(memberDoc, { contributions: newOrder });
+  alert("✅ নতুন ক্রম সেভ হয়েছে!");
+});
 </script>
 
 <style>
@@ -128,9 +201,12 @@ header button{background:red;color:white;border:none;padding:8px 15px;border-rad
 main{margin-top:30px;display:flex;flex-direction:column;align-items:center;}
 select,input,button{margin:8px;padding:10px;font-size:16px;}
 #saveBtn{background:green;color:white;border:none;border-radius:5px;cursor:pointer;}
+#saveOrderBtn{background:orange;color:white;border:none;border-radius:5px;cursor:pointer;}
 table{width:80%;margin-top:20px;border-collapse:collapse;}
 th,td{border:1px solid #ddd;padding:10px;text-align:center;}
 th{background:#007bff;color:white;}
+/* drag effect */
+tr.dragging {opacity:0.5;background:#ffe0b3;}
 </style>
 </head>
 <body>
@@ -158,7 +234,10 @@ th{background:#007bff;color:white;}
 </thead>
 <tbody id="contributionsBody"></tbody>
 </table>
+
+<!-- নতুন ক্রম সেভ করার বাটন -->
+<button id="saveOrderBtn">💾 Save Order</button>
+
 </main>
 </body>
 </html>
-

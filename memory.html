@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" sizes="180x180" type="image/png" href="favicon.png">
+  <title>আমাদের স্মৃতি</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #d4edda, #a8e6cf);
+      color: #333;
+      text-align: center;
+    }
+    .topnav {
+      display: flex;
+      justify-content: flex-end;
+      padding: 15px 20px;
+    }
+    .topnav a {
+      text-decoration: none;
+      background: #2a9d8f;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .topnav a:hover { background: #21867a; }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h2 {
+      color: #e63946;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    h3 {
+      color: #2a9d8f;
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .card {
+      background-color: #ffffffcc;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      padding: 30px 20px;
+      width: 250px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #264653;
+      display: block;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+    }
+    /* Login modal */
+    #loginModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    #loginBox {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 8px;
+      margin: 6px 0;
+    }
+    button {
+      padding: 8px 15px;
+      margin-top: 10px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="topnav">
+    <a href="index.html">Home Page</a>
+  </div>
+
+  <div class="container">
+    <h2>আমাদের স্মৃতি</h2>
+    <h3>আমাদের কিছু স্মৃতি এখানে তুলে ধরা হলো।</h3>
+
+    <div class="card-container">
+      <div class="card">
+        <a onclick="openLogin('https://drive.google.com/drive/folders/1kId6RopYdZjk3sRiCNCvcetn3QKmjcVy')">ভিডিও</a>
+      </div>
+      <div class="card">
+        <a href="https://drive.google.com/drive/folders/1ZfvZ0rj_AJrDzjJsrSPGNIGkAqSsegQy?usp=drive_link" target="_blank">
+          ছবি
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal">
+    <div id="loginBox">
+      <h3>Login Required</h3>
+      <input type="text" id="username" placeholder="Email"><br>
+      <input type="password" id="password" placeholder="Password"><br>
+      <button onclick="checkLogin()">Login</button>
+      <br><br>
+      <button onclick="closeLogin()" style="background:red;">Cancel</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC63JYlboedK6hE_u4ubAT0Nm2PIo-ygQk",
+      authDomain: "atmoshuddi.firebaseapp.com",
+      projectId: "atmoshuddi",
+      storageBucket: "atmoshuddi.firebasestorage.app",
+      messagingSenderId: "540869594984",
+      appId: "1:540869594984:web:667a69b95b6edd983ed0dd",
+      measurementId: "G-X9HQ1DN4P7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let targetPage = "";
+
+    function openLogin(page) {
+      targetPage = page;
+      document.getElementById("loginModal").style.display = "flex";
+    }
+    window.openLogin = openLogin;
+
+    function closeLogin() {
+      document.getElementById("loginModal").style.display = "none";
+    }
+    window.closeLogin = closeLogin;
+
+    function checkLogin() {
+      const email = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          window.location.href = targetPage;
+        })
+        .catch(() => {
+          alert("❌ Wrong username or password!");
+        });
+    }
+    window.checkLogin = checkLogin;
+  </script>
+</body>
+</html>

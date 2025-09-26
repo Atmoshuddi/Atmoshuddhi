@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>সদস্যবৃন্দ - আত্মশুদ্ধি</title>
+<link rel="icon" href="favicon.png" sizes="180x180">
+<style>
+  #homeBtn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #e76f51;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+    #homeBtn:hover {
+      background: #d6543a;
+      transform: translateY(-2px);
+    }
+  body { font-family: Arial, sans-serif; margin:0; background: linear-gradient(to bottom, #a8e6cf, #dcedc1); text-align:center; }
+  h1 { margin-top:20px; color:#264653; font-size:2.5rem; }
+  ul { list-style:none; padding:0; margin:30px auto; max-width:600px; }
+  li { margin:12px 0; }
+  li button { width:100%; background:#2a9d8f; color:white; border:none; padding:14px 0; border-radius:12px; cursor:pointer; font-size:18px; transition:0.3s; }
+  li button:hover { background:#21867a; transform:translateY(-2px); }
+  /* Login Modal */
+  .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background: rgba(0,0,0,0.6); align-items:center; justify-content:center; }
+  .modal-content { background:white; padding:25px; border-radius:16px; width:320px; text-align:center; box-shadow:0 8px 20px rgba(0,0,0,0.3); }
+  .modal-content h2 { margin-bottom:20px; color:#264653; }
+  .modal-content input { width:90%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:8px; text-align:center; font-size:16px; }
+  .modal-content button { background:#2a9d8f; color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer; font-size:16px; margin-top:10px; transition:0.3s; }
+  .modal-content button:hover { background:#21867a; }
+  .close { float:right; cursor:pointer; color:red; font-weight:bold; font-size:20px; }
+  #loginMsg { color:red; font-size:14px; margin-top:12px; }
+</style>
+</head>
+<body>
+
+<h3>সদস্যবৃন্দ</h3>
+<button id="homeBtn" onclick="window.location.href='index.html'">Home Page</button>
+<ul id="memberList">
+  <li><button data-email="nahidul@example.com" data-name="Nahidul Islam Shahin" onclick="openLogin(this)">Nahidul Islam Shahin</button></li>
+  <li><button data-email="sowrov@example.com" data-name="Shohrah Uddin Sowrov" onclick="openLogin(this)">Shohrah Uddin Sowrov</button></li>
+  <li><button data-email="sohag@example.com" data-name="Zahedul Amin Sohag" onclick="openLogin(this)">Zahedul Amin Sohag</button></li>
+  <li><button data-email="ziabul@example.com" data-name="Ziabul" onclick="openLogin(this)">Ziabul</button></li>
+  <li><button data-email="mojibul@example.com" data-name="Mojibul Alam" onclick="openLogin(this)">Mojibul Alam</button></li>
+  <li><button data-email="jahir@example.com" data-name="Jahir Amor" onclick="openLogin(this)">Jahir Amor</button></li>
+  <li><button data-email="naim@example.com" data-name="Abu Arif Naim" onclick="openLogin(this)">Abu Arif Naim</button></li>
+  <li><button data-email="tipu@example.com" data-name="Nahidul Islam Tipu" onclick="openLogin(this)">Nahidul Islam Tipu</button></li>
+  <li><button data-email="mofiz@example.com" data-name="Mofiz Alam" onclick="openLogin(this)">Mofiz Alam</button></li>
+  <li><button data-email="rumi@example.com" data-name="Jalal Uddin Rumi" onclick="openLogin(this)">Jalal Uddin Rumi</button></li>
+  <li><button data-email="shaker@example.com" data-name="Shaker Alam" onclick="openLogin(this)">Shaker Alam</button></li>
+  <li><button data-email="mahbub@example.com" data-name="Mahbubul Alam" onclick="openLogin(this)">Mahbubul Alam</button></li>
+  <li><button data-email="nezam@example.com" data-name="Nezam Uddin" onclick="openLogin(this)">Nezam Uddin</button></li>
+</ul>
+
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeLogin()">&times;</span>
+    <h2>সদস্য লগইন</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="memberLogin()">Login</button>
+    <p id="loginMsg"></p>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC63JYlboedK6hE_u4ubAT0Nm2PIo-ygQk",
+  authDomain: "atmoshuddi.firebaseapp.com",
+  projectId: "atmoshuddi",
+  storageBucket: "atmoshuddi.firebasestorage.app",
+  messagingSenderId: "540869594984",
+  appId: "1:540869594984:web:667a69b95b6edd983ed0dd",
+  measurementId: "G-X9HQ1DN4P7"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+let selectedEmail = "";
+let selectedName = "";
+
+window.openLogin = function(btn) {
+  selectedEmail = btn.dataset.email;
+  selectedName = btn.dataset.name;
+  document.getElementById("email").value = selectedEmail;
+  document.getElementById("loginModal").style.display = "flex";
+}
+
+window.closeLogin = function() {
+  document.getElementById("loginModal").style.display = "none";
+  document.getElementById("loginMsg").textContent = "";
+}
+
+window.memberLogin = function() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const msg = document.getElementById("loginMsg");
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(userCredential => {
+      // Name localStorage এ সংরক্ষণ
+      localStorage.setItem("memberName", selectedName);
+      // Dashboard এ নিয়ে যান
+      window.location.href = `members/member-dashboard.html?uid=${userCredential.user.uid}`;
+    })
+    .catch(error => {
+      msg.textContent = "❌ " + error.message;
+    });
+}
+</script>
+
+</body>
+</html>

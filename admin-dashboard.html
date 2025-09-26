@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>এডমিন ড্যাশবোর্ড</title>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { 
+  getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove 
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC63JYlboedK6hE_u4ubAT0Nm2PIo-ygQk",
+  authDomain: "atmoshuddi.firebaseapp.com",
+  projectId: "atmoshuddi",
+  storageBucket: "atmoshuddi.firebasestorage.app",
+  messagingSenderId: "540869594984",
+  appId: "1:540869594984:web:667a69b95b6edd983ed0dd",
+  measurementId: "G-X9HQ1DN4P7"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const memberSelect = document.getElementById("memberSelect");
+const tableBody = document.getElementById("contributionsBody");
+
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  signOut(auth).then(() => window.location.href="/index.html");
+});
+
+// Members data: নাম + UID
+const members = [
+  {name:"Nahidul Islam Shahin", uid:"TswpmH1sN7fRpF6Yk7eolo7Ugds2"},
+  {name:"Shohrah Uddin Sowrov", uid:"wQSvWHi2QOWsqg7VxhvQp8Bq8zw1"},
+  {name:"Zahedul Amin Sohag", uid:"FhS6Tb10XYeVjwv4rcfAEr7ZuV33"},
+  {name:"Ziabul",uid:"cHb9uvDq5hSAUuBVloG4NR3gPof1"},
+  {name:"Mojibul Alam", uid:"5VdlbmtFCYeMH6jyDYJgjqTn1uC2"},
+  {name:"Jahir Amor", uid:"q1Dc1OeL95NDyRg4eFFVyl5BqbX2"},
+  {name:"Abu Arif Naim", uid:"57Yysv0aWfhcNSC8awu1L1dzVTm2"},
+  {name:"Nahidul Islam Tipu", uid:"PaaeyQt3RfbrSI69NlKz9gilFy32"},
+  {name:"Mofiz Alam", uid:"b7F4IOc7GNofRfx15Qd0JmUFTH3"},
+  {name:"Jalal Uddin Rumi", uid:"lmP4QmU0FXQwZbKHcVvydj97TQu1"},
+  {name:"Shaker Alam", uid:"myG9AZSmqwd54h5i0S2rsXqiuda2"},
+  {name:"Mahbubul Alam", uid:"4ILmO5KmbUb38cySJnOM4001cEy1"},
+  {name:"Nezam Uddin", uid:"bIHNGBaFHKaYd6TKlg4NwfUKcg13"}
+];
+
+// Populate dropdown
+members.forEach(m => {
+  const option = document.createElement("option");
+  option.value = m.uid; // internal UID
+  option.textContent = m.name; // visible
+  memberSelect.appendChild(option);
+});
+
+let selectedUID = null;
+
+// Load contributions for selected member
+memberSelect.addEventListener("change", async () => {
+  tableBody.innerHTML = "";
+  selectedUID = memberSelect.value;
+  if(!selectedUID) return;
+
+  const memberDoc = doc(db, "members", selectedUID);
+  const snap = await getDoc(memberDoc);
+  if(snap.exists()){
+    const contributions = snap.data().contributions || [];
+    contributions.forEach(item => {
+      const tr = document.createElement("tr");
+
+      const tdMonth = document.createElement("td");
+      tdMonth.textContent = item.month;
+
+      const tdAmount = document.createElement("td");
+      tdAmount.textContent = item.amount;
+
+      const tdAction = document.createElement("td");
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "❌ Delete";
+      delBtn.style.background="red";
+      delBtn.style.color="white";
+      delBtn.style.border="none";
+      delBtn.style.borderRadius="4px";
+      delBtn.style.cursor="pointer";
+      delBtn.addEventListener("click", async ()=>{
+        if(confirm("⚠ আপনি কি নিশ্চিত ডিলিট করতে চান?")){
+          await updateDoc(memberDoc,{ contributions: arrayRemove(item) });
+          tr.remove();
+        }
+      });
+      tdAction.appendChild(delBtn);
+
+      tr.appendChild(tdMonth);
+      tr.appendChild(tdAmount);
+      tr.appendChild(tdAction);
+
+      tableBody.appendChild(tr);
+    });
+  }
+});
+
+// Save contribution
+document.getElementById("saveBtn").addEventListener("click", async () => {
+  if(!selectedUID) return alert("⚠ মেম্বার সিলেক্ট করুন!");
+  const month = document.getElementById("month").value.trim();
+  const amount = parseInt(document.getElementById("amount").value.trim());
+  if(!month || !amount) return alert("⚠ সব ফিল্ড পূরণ করুন!");
+
+  const memberDoc = doc(db, "members", selectedUID);
+  await updateDoc(memberDoc, { contributions: arrayUnion({month, amount}) });
+
+  document.getElementById("month").value="";
+  document.getElementById("amount").value="";
+  memberSelect.dispatchEvent(new Event("change")); // refresh table
+});
+</script>
+
+<style>
+body{font-family:Arial;text-align:center;background:#f4f4f9;margin:0;padding:0;}
+header{display:flex;justify-content:space-between;align-items:center;background:#007bff;color:white;padding:10px 20px;}
+header h1{margin:0;font-size:22px;}
+header button{background:red;color:white;border:none;padding:8px 15px;border-radius:5px;cursor:pointer;}
+main{margin-top:30px;display:flex;flex-direction:column;align-items:center;}
+select,input,button{margin:8px;padding:10px;font-size:16px;}
+#saveBtn{background:green;color:white;border:none;border-radius:5px;cursor:pointer;}
+table{width:80%;margin-top:20px;border-collapse:collapse;}
+th,td{border:1px solid #ddd;padding:10px;text-align:center;}
+th{background:#007bff;color:white;}
+</style>
+</head>
+<body>
+<header>
+<h1>এডমিন ড্যাশবোর্ড</h1>
+<button id="logoutBtn">লগআউট</button>
+</header>
+
+<main>
+<h2>অবদান পরিচালনা করুন</h2>
+<select id="memberSelect">
+  <option value="">-- মেম্বার সিলেক্ট করুন --</option>
+</select><br>
+<input type="text" id="month" placeholder="মাস (যেমন: সেপ্টেম্বর ২০২৫)"><br>
+<input type="number" id="amount" placeholder="অবদানের পরিমাণ"><br>
+<button id="saveBtn">Save</button>
+
+<table id="contributionsTable">
+<thead>
+<tr>
+<th>মাস</th>
+<th>অবদান</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="contributionsBody"></tbody>
+</table>
+</main>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" sizes="180x180" type="image/png" href="favicon.png">
+  <title>আত্মশুদ্ধি</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #a8e6cf, #dcedc1);
+      min-height: 100vh;
+    }
+    .background {
+      background-image: url('favicon.png');
+      background-size: 200px 200px;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.1;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+    }
+    h1 {
+      font-size: 3rem;
+      color: #e63946;
+      text-align: center;
+      margin: 40px 10px 10px 10px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    }
+    .marquee {
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 1.5rem;
+      color: #264653;
+      margin: 20px 0;
+    }
+    .marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marqueeAnim 15s linear infinite;
+    }
+    @keyframes marqueeAnim { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+
+    .topnav {
+      background-color: #ffffffcc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      border-radius: 10px;
+      margin: 0 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: #264653;
+      text-align: center;
+      padding: 12px 18px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .nav-links a:hover { background-color: #2a9d8f; color: white; }
+    .nav-links a.active { background-color: #e76f51; color: white; }
+    .icon { display: none; font-size: 28px; cursor: pointer; padding: 12px; }
+
+    @media (max-width: 768px) {
+      .nav-links { flex-direction: column; width: 100%; max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+      .nav-links.show { max-height: 500px; }
+      .topnav { margin: 10px; }
+      .icon { display: block; }
+      .nav-links a { text-align: left; padding: 12px 20px; margin: 2px 0; }
+    }
+
+    /* Login Modal */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .modal-content h2 { margin-bottom: 15px; color: #264653; }
+    .modal-content input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .modal-content button {
+      background: #2a9d8f;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .modal-content button:hover { background: #21867a; }
+    .close { float: right; cursor: pointer; color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  <h1>আত্মশুদ্ধি</h1>
+
+  <div class="marquee">
+    <span>'আত্মশুদ্ধি' পরিবারের ওয়েবসাইটে আপনাকে স্বাগতম।</span>
+  </div>
+
+  <div class="topnav">
+    <span class="icon" id="menuBtn" onclick="toggleMenu()">☰</span>
+    <div class="nav-links" id="menu">
+      <a class="active" href="#">হোম</a>
+      <a href="member.html">সদস্যবৃন্দ</a>
+      <a href="memory.html">আমাদের স্মৃতি</a>
+      <a href="about.html">আত্মশুদ্ধি সম্পর্কে</a>
+      <a href="#" onclick="openLogin()">🔑 এডমিন লগইন</a>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeLogin()">&times;</span>
+      <h2>এডমিন লগইন</h2>
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p id="loginMsg" style="color:red; font-size:14px;"></p>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC63JYlboedK6hE_u4ubAT0Nm2PIo-ygQk",
+      authDomain: "atmoshuddi.firebaseapp.com",
+      projectId: "atmoshuddi",
+      storageBucket: "atmoshuddi.firebasestorage.app",
+      messagingSenderId: "540869594984",
+      appId: "1:540869594984:web:667a69b95b6edd983ed0dd",
+      measurementId: "G-X9HQ1DN4P7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+
+    window.toggleMenu = function () {
+      const menu = document.getElementById("menu");
+      const btn = document.getElementById("menuBtn");
+      menu.classList.toggle("show");
+      btn.textContent = menu.classList.contains("show") ? "✖" : "☰";
+    }
+
+    window.openLogin = function () { document.getElementById("loginModal").style.display = "flex"; }
+    window.closeLogin = function () { document.getElementById("loginModal").style.display = "none"; }
+
+    window.login = function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const msg = document.getElementById("loginMsg");
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          if(user.uid === "7xNLWGaF2HSBDJLshmlaGmtOeUs1") {
+            msg.style.color = "green";
+            msg.textContent = "✅ লগইন সফল!";
+            setTimeout(() => { window.location.href = "admin-dashboard.html"; }, 1000);
+          } else {
+            msg.style.color = "red";
+            msg.textContent = "❌ আপনি এডমিন নন!";
+          }
+        })
+        .catch((error) => { msg.style.color = "red"; msg.textContent = "❌ " + error.message; });
+    }
+  </script>
+</body>
+</html>

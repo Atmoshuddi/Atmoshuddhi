@@ -114,6 +114,7 @@ function makeRowsDraggable() {
 }
 
 // Load contributions for selected member
+// Load contributions for selected member
 memberSelect.addEventListener("change", async () => {
   tableBody.innerHTML = "";
   selectedUID = memberSelect.value;
@@ -123,6 +124,36 @@ memberSelect.addEventListener("change", async () => {
   const snap = await getDoc(memberDoc);
   if(snap.exists()){
     const contributions = snap.data().contributions || [];
+    
+    // মোট বের করা
+    let total = 0;
+    contributions.forEach(item => total += item.amount);
+
+    // হেডারের মত মোট সারি বানানো
+    const trTotal = document.createElement("tr");
+    const tdLabel = document.createElement("td");
+    tdLabel.textContent = "মোট";
+    tdLabel.style.fontWeight = "bold";
+    tdLabel.style.background = "#007bff";
+    tdLabel.style.color = "white";
+
+    const tdTotal = document.createElement("td");
+    tdTotal.textContent = total;
+    tdTotal.style.fontWeight = "bold";
+    tdTotal.style.background = "#007bff";
+    tdTotal.style.color = "white";
+
+    const tdEmpty = document.createElement("td");
+    tdEmpty.style.background = "#007bff";
+
+    trTotal.appendChild(tdLabel);
+    trTotal.appendChild(tdTotal);
+    trTotal.appendChild(tdEmpty);
+
+    // tbody-এর একদম শুরুতে বসানো
+    tableBody.appendChild(trTotal);
+
+    // প্রতিটি অবদান যোগ করা
     contributions.forEach(item => {
       const tr = document.createElement("tr");
 
@@ -159,6 +190,7 @@ memberSelect.addEventListener("change", async () => {
     makeRowsDraggable();
   }
 });
+
 
 // Save contribution
 document.getElementById("saveBtn").addEventListener("click", async () => {
@@ -241,4 +273,3 @@ tr.dragging {opacity:0.5;background:#ffe0b3;}
 </main>
 </body>
 </html>
-

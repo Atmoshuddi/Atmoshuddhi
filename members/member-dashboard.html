@@ -148,8 +148,9 @@ onAuthStateChanged(auth, user => {
         const contributions = data.contributions || [];
         tableBody.innerHTML = "";
         let total = 0;
-        contributions.forEach(item => {
+        contributions.forEach((item, index) => {
           const tr = document.createElement("tr");
+          tr.style.backgroundColor = (index % 2 === 0) ? "#f0f8ff" : "#e6f7e6";
           const tdMonth = document.createElement("td");
           tdMonth.textContent = item.month;
           const tdAmount = document.createElement("td");
@@ -161,6 +162,7 @@ onAuthStateChanged(auth, user => {
         });
         // Total row
         const trTotal = document.createElement("tr");
+        trTotal.style.backgroundColor = "#ffbf00"; 
         const tdLabel = document.createElement("td");
         tdLabel.textContent = "মোট";
         tdLabel.style.fontWeight = "bold";

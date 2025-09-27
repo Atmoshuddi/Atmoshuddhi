@@ -27,13 +27,14 @@ const db = getFirestore(app);
 
 const memberSelect = document.getElementById("memberSelect");
 const tableBody = document.getElementById("contributionsBody");
+const totalAmountCell = document.getElementById("totalAmount");
 
 // Logout
 document.getElementById("logoutBtn").addEventListener("click", () => {
   signOut(auth).then(() => window.location.href="/index.html");
 });
 
-// Members data: নাম + UID
+// Members data
 const members = [
   {name:"Nahidul Islam Shahin", uid:"TswpmH1sN7fRpF6Yk7eolo7Ugds2"},
   {name:"Shohrah Uddin Sowrov", uid:"wQSvWHi2QOWsqg7VxhvQp8Bq8zw1"},
@@ -53,8 +54,8 @@ const members = [
 // Populate dropdown
 members.forEach(m => {
   const option = document.createElement("option");
-  option.value = m.uid; // internal UID
-  option.textContent = m.name; // visible
+  option.value = m.uid;
+  option.textContent = m.name;
   memberSelect.appendChild(option);
 });
 
@@ -114,7 +115,6 @@ function makeRowsDraggable() {
 }
 
 // Load contributions for selected member
-// Load contributions for selected member
 memberSelect.addEventListener("change", async () => {
   tableBody.innerHTML = "";
   selectedUID = memberSelect.value;
@@ -128,30 +128,7 @@ memberSelect.addEventListener("change", async () => {
     // মোট বের করা
     let total = 0;
     contributions.forEach(item => total += item.amount);
-
-    // হেডারের মত মোট সারি বানানো
-    const trTotal = document.createElement("tr");
-    const tdLabel = document.createElement("td");
-    tdLabel.textContent = "মোট";
-    tdLabel.style.fontWeight = "bold";
-    tdLabel.style.background = "#007bff";
-    tdLabel.style.color = "white";
-
-    const tdTotal = document.createElement("td");
-    tdTotal.textContent = total;
-    tdTotal.style.fontWeight = "bold";
-    tdTotal.style.background = "#007bff";
-    tdTotal.style.color = "white";
-
-    const tdEmpty = document.createElement("td");
-    tdEmpty.style.background = "#007bff";
-
-    trTotal.appendChild(tdLabel);
-    trTotal.appendChild(tdTotal);
-    trTotal.appendChild(tdEmpty);
-
-    // tbody-এর একদম শুরুতে বসানো
-    tableBody.appendChild(trTotal);
+    totalAmountCell.textContent = total;
 
     // প্রতিটি অবদান যোগ করা
     contributions.forEach(item => {
@@ -175,6 +152,8 @@ memberSelect.addEventListener("change", async () => {
         if(confirm("⚠ আপনি কি নিশ্চিত ডিলিট করতে চান?")){
           await updateDoc(memberDoc,{ contributions: arrayRemove(item) });
           tr.remove();
+          totalAmountCell.textContent =
+            parseInt(totalAmountCell.textContent) - item.amount;
         }
       });
       tdAction.appendChild(delBtn);
@@ -190,7 +169,6 @@ memberSelect.addEventListener("change", async () => {
     makeRowsDraggable();
   }
 });
-
 
 // Save contribution
 document.getElementById("saveBtn").addEventListener("click", async () => {
@@ -211,7 +189,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
 document.getElementById("saveOrderBtn").addEventListener("click", async () => {
   if(!selectedUID) return alert("⚠ মেম্বার সিলেক্ট করুন!");
 
-  const rows = tableBody.querySelectorAll("tr");
+  const rows = tableBody.querySelectorAll("tr"); // শুধু tbody-এর সারি
   const newOrder = [];
   rows.forEach(r => {
     const month = r.children[0].textContent;
@@ -237,6 +215,7 @@ select,input,button{margin:8px;padding:10px;font-size:16px;}
 table{width:80%;margin-top:20px;border-collapse:collapse;}
 th,td{border:1px solid #ddd;padding:10px;text-align:center;}
 th{background:#007bff;color:white;}
+tfoot td{font-weight:bold;background:#007bff;color:white;}
 /* drag effect */
 tr.dragging {opacity:0.5;background:#ffe0b3;}
 </style>
@@ -265,6 +244,13 @@ tr.dragging {opacity:0.5;background:#ffe0b3;}
 </tr>
 </thead>
 <tbody id="contributionsBody"></tbody>
+<tfoot>
+<tr id="totalRow">
+<td>মোট</td>
+<td id="totalAmount">0</td>
+<td></td>
+</tr>
+</tfoot>
 </table>
 
 <!-- নতুন ক্রম সেভ করার বাটন -->

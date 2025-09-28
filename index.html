@@ -12,6 +12,29 @@
       background: linear-gradient(to bottom, #a8e6cf, #dcedc1);
       min-height: 100vh;
     }
+    .date-time-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+      padding: 8px;
+      font-size: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      border-bottom: 2px solid #2a9d8f;
+      background: linear-gradient(to right, #a8e6cf, #dcedc1);
+      color: #264653;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-family: monospace; /* লাফানো কমাতে monospace */
+    }
+    .date-time-bar span { font-weight: bold; }
+    @media (max-width: 600px) {
+      .date-time-bar { font-size: 0.9rem; gap: 4px; }
+    }
+
     .background {
       background-image: url('favicon.png');
       background-size: 200px 200px;
@@ -22,6 +45,7 @@
       top: 0; left: 0; right: 0; bottom: 0;
       z-index: -1;
     }
+
     h1 {
       font-size: 3rem;
       color: #e63946;
@@ -29,6 +53,7 @@
       margin: 40px 10px 10px 10px;
       text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
     }
+
     .marquee {
       overflow: hidden;
       white-space: nowrap;
@@ -40,8 +65,13 @@
       display: inline-block;
       padding-left: 100%;
       animation: marqueeAnim 15s linear infinite;
+      animation-play-state: running;
     }
-    @keyframes marqueeAnim { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    .marquee:hover span { animation-play-state: paused; }
+    @keyframes marqueeAnim {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
 
     .topnav {
       background-color: #ffffffcc;
@@ -54,10 +84,7 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       flex-wrap: wrap;
     }
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-    }
+    .nav-links { display: flex; flex-wrap: wrap; }
     .nav-links a {
       color: #264653;
       text-align: center;
@@ -70,7 +97,6 @@
     .nav-links a:hover { background-color: #2a9d8f; color: white; }
     .nav-links a.active { background-color: #e76f51; color: white; }
     .icon { display: none; font-size: 28px; cursor: pointer; padding: 12px; }
-
     @media (max-width: 768px) {
       .nav-links { flex-direction: column; width: 100%; max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
       .nav-links.show { max-height: 500px; }
@@ -78,38 +104,27 @@
       .icon { display: block; }
       .nav-links a { text-align: left; padding: 12px 20px; margin: 2px 0; }
     }
-    .date-time-bar {
+.date-time-bar, .clock-bar {
   text-align: center;
-  padding: 8px;
-  font-size: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 2000;
-  border-bottom: 2px solid #2a9d8f;
-
-  /* নতুন স্টাইল */
-  background: linear-gradient(to right, #a8e6cf, #dcedc1);
-  color: #264653;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  font-family: monospace;
+  margin: 5px 0;
 }
-.date-time-bar span { 
-  margin: 0 10px; 
+#clock {
+ display: inline-block;
+  margin-top: 5px;
+  padding: 5px 5px;
+  font-size: 15px;
   font-weight: bold;
+  font-family: monospace;
+  color: #043a63;
+  background: linear-gradient(135deg, #4ffe86, #00f2fe); /* সুন্দর গ্রেডিয়েন্ট */
+  border-radius: 10px;
+  box-shadow: 0 2px 1px rgba(0,0,0,0.2); /* হালকা শেডো */
+  
 }
-
 
     /* Login Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      align-items: center;
-      justify-content: center;
-    }
+    .modal { display: none; position: fixed; z-index: 1000; left:0; top:0; width:100%; height:100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
     .modal-content {
       background: white;
       padding: 20px;
@@ -119,49 +134,27 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
     .modal-content h2 { margin-bottom: 15px; color: #264653; }
-    .modal-content input {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .modal-content button {
-      background: #2a9d8f;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+    .modal-content input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; }
+    .modal-content button { background: #2a9d8f; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
     .modal-content button:hover { background: #21867a; }
     .close { float: right; cursor: pointer; color: red; font-weight: bold; }
 
-    /* Clock + Date Bar */
-    .date-time-bar {
-      text-align: center;
-      background: #ffffffee;
-      padding: 8px;
-      font-size: 1rem;
-      border-bottom: 2px solid #2a9d8f;
-      position: sticky;
-      top: 0;
-      z-index: 2000;
-    }
-    .date-time-bar span { margin: 0 8px; font-weight: bold; color: #264653; }
   </style>
 </head>
 <body>
   <div class="background"></div>
 
   <!-- Date-Time Bar -->
-  <div class="date-time-bar">
-    ⏰ <span id="clock"></span> |
-    📅 <span id="bangla-date"></span> |
-    <span id="english-date"></span> |
-    <span id="hijri-bn"></span> |
-    <span id="weekday"></span>
-  </div>
+ <div class="date-time-bar">
+   📅<span id="bangla-date"></span> | 
+  <span id="english-date"></span> | 
+  <span id="hijri-bn"></span> | 
+  <span id="weekday"></span>
+</div>
+
+<div class="clock-bar">
+  <span id="clock"></span>
+</div>
 
   <h1>আত্মশুদ্ধি</h1>
 
@@ -244,224 +237,81 @@
   </script>
 
   <!-- Date & Time Script -->
-  <div id="clock"></div>
-<div id="english-date"></div>
-<div id="weekday"></div>
+  <script>
+    (function(){
+      const TZ = 'Asia/Dhaka';
 
-<script>
-  function updateDateTime() {
-    let now = new Date();
+      function toTZDate(d){ return new Date(d.toLocaleString('en-US', { timeZone: TZ })); }
+      function isLeapYear(y){ return (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0)); }
+      function toBanglaDigits(s){ return String(s).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]); }
+      const bnMonths = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
 
-    // ঘড়ি (বাংলা সংখ্যায়)
-    let timeOptions = { timeZone: "Asia/Dhaka", hour: 'numeric', minute: 'numeric', second: 'numeric' };
-    document.getElementById("clock").innerHTML = now.toLocaleTimeString("bn-BD", timeOptions);
-
-    // ইংরেজি তারিখ
-    let enOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById("english-date").innerHTML = now.toLocaleDateString("en-GB", enOptions);
-
-    // বার (বাংলায়)
-    let weekday = now.toLocaleDateString("bn-BD", { weekday: 'long' });
-    document.getElementById("weekday").innerHTML = weekday;
-  }
-
-  setInterval(updateDateTime, 1000);
-  updateDateTime();
-</script>
-
-<div id="hijri-bn"></div>
-
-<script>
-  function convertHijriToBangla() {
-    let now = new Date();
-    let hijri = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    }).format(now);
-
-    // আরবি সংখ্যা → বাংলা সংখ্যা
-    const numMap = { "٠":"০","١":"১","٢":"২","٣":"৩","٤":"৪","٥":"৫","٦":"৬","٧":"৭","٨":"৮","٩":"৯" };
-    hijri = hijri.replace(/[٠-٩]/g, d => numMap[d]);
-
-    // আরবি মাস → বাংলা মাস
-    const monthMap = {
-      "محرم": "মুহররম",
-      "صفر": "সফর",
-      "ربيع الأول": "রবিউল আউয়াল",
-      "ربيع الآخر": "রবিউস সানি",
-      "جمادى الأولى": "জমাদিউল আউয়াল",
-      "جمادى الآخرة": "জমাদিউস সানি",
-      "رجب": "রজব",
-      "شعبان": "শাবান",
-      "رمضان": "রমজান",
-      "شوال": "শাওয়াল",
-      "ذو القعدة": "জিলকদ",
-      "ذو الحجة": "জিলহজ"
-    };
-    for (let ar in monthMap) {
-      hijri = hijri.replace(ar, monthMap[ar]);
-    }
-
-    document.getElementById("hijri-bn").innerHTML = hijri;
-  }
-
-  convertHijriToBangla();
-</script>
-<!-- --- নিচের স্ক্রিপ্টটি পেস্ট করুন (bangla-date auto) --- -->
-<script>
-(function(){
-  const TZ = 'Asia/Dhaka';
-
-  // Dhaka টাইমজোন অনুযায়ী Date তৈরি করার হেল্পার
-  function toTZDate(d){
-    return new Date(d.toLocaleString('en-US', { timeZone: TZ }));
-  }
-
-  function isLeapYear(y){
-    return (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0));
-  }
-
-  // বাংলা সংখ্যা কনভার্টার
-  function toBanglaDigits(s){
-    return String(s).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
-  }
-
-  // বাংলা মাসের নাম
-  const bnMonths = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
-
-  // প্রধান ফাংশন: গ্রেগরিয়ান -> বাংলা তারিখ (বাংলাদেশ স্টাইল, Pohela Boishakh = 14 April)
-  function computeBanglaDate(nowDt){
-    // nowDt should already be Dhaka local date object
-    // নির্ধারণ কোন Gregorian বছর থেকে বাংলা বছর শুরু হয়েছে
-    let startGreg = nowDt.getFullYear();
-    if (nowDt.getMonth() < 3 || (nowDt.getMonth() === 3 && nowDt.getDate() < 14)) {
-      startGreg = startGreg - 1;
-    }
-    // বাংলা বছর শুরু (Pohela Boishakh) = startGreg-04-14
-    const startDate = new Date(startGreg, 3, 14); // note: month index 3 = April
-    // days difference (ব্যবহার করছি শুধুই দিন পার্থক্য)
-    const oneDay = 24 * 60 * 60 * 1000;
-    // make both comparable in local (we already built nowDt using toTZDate, and startDate uses local YMD - this works reliably for typical setups)
-    const diffDays = Math.floor((toTZDate(nowDt) - toTZDate(startDate)) / oneDay);
-    const falgunLen = isLeapYear(startGreg + 1) ? 30 : 29; // Falgun দীর্ঘ হয় যদি পরের গ্রেগরিয়ান বছর লিপ ইয়ার হয় (Feb-এ extra day)
-    const monthLens = [31,31,31,31,31,30,30,30,30,30,falgunLen,31];
-
-    let rem = diffDays;
-    let m = 0;
-    while (rem >= monthLens[m]) {
-      rem -= monthLens[m];
-      m++;
-      if (m > 11) break;
-    }
-    const day = rem + 1;
-    const banglaYear = startGreg - 593; // bangla year calculation (startYear - 593)
-
-    return {
-      day: day,
-      monthIndex: m,
-      monthName: bnMonths[m],
-      year: banglaYear,
-      pretty: `${toBanglaDigits(day)} ${bnMonths[m]} ${toBanglaDigits(banglaYear)}`
-    };
-  }
-
-  // হিজরি (Arabic) -> বাংলা কনভার্ট: আরবি সংখ্যা বাংলা সংখ্যায়, মাস নাম বাংলা
-  function arabicHijriToBanglaStr(nowDt){
-    try {
-      let hijri = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      }).format(nowDt);
-
-      const arNumMap = { "٠":"০","١":"১","٢":"২","٣":"৩","٤":"৪","٥":"৫","٦":"৬","٧":"৭","٨":"৮","٩":"৯" };
-      hijri = hijri.replace(/[٠-٩]/g, d => arNumMap[d]);
-
-      const monthMap = {
-        "محرم": "মুহররম",
-        "صفر": "সফর",
-        "ربيع الأول": "রবিউল আউয়াল",
-        "ربيع الآخر": "রবিউস সানি",
-        "جمادى الأولى": "জমাদিউল আউয়াল",
-        "جمادى الآخرة": "জমাদিউস সানি",
-        "رجب": "রজব",
-        "شعبان": "শাবান",
-        "رمضان": "রমজান",
-        "شوال": "শাওয়াল",
-        "ذو القعدة": "জিলকদ",
-        "ذو الحجة": "জিলহজ"
-      };
-      for (const ar in monthMap) {
-        hijri = hijri.replace(ar, monthMap[ar]);
+      function computeBanglaDate(nowDt){
+        let startGreg = nowDt.getFullYear();
+        if(nowDt.getMonth() < 3 || (nowDt.getMonth()===3 && nowDt.getDate()<14)) startGreg--;
+        const startDate = new Date(startGreg, 3, 14);
+        const oneDay = 24*60*60*1000;
+        const diffDays = Math.floor((toTZDate(nowDt)-toTZDate(startDate))/oneDay);
+        const falgunLen = isLeapYear(startGreg+1)?30:29;
+        const monthLens = [31,31,31,31,31,30,30,30,30,30,falgunLen,31];
+        let rem=diffDays, m=0;
+        while(rem>=monthLens[m]){ rem-=monthLens[m]; m++; if(m>11) break; }
+        const day=rem+1, year=startGreg-593;
+        return { day, monthName: bnMonths[m], year, pretty:`${toBanglaDigits(day)} ${bnMonths[m]} ${toBanglaDigits(year)}` };
       }
-      return hijri;
-    } catch (e) {
-      return "⚠️ সমর্থিত না";
-    }
-  }
 
-  // মূল আপডেটার (উপাদানগুলোর ID অনুযায়ী ভরাট করে)
-  function updateAll(){
-    const now = toTZDate(new Date());
-
-    // Clock (বাংলা সংখ্যায়)
-    const clockEl = document.getElementById('clock');
-    if (clockEl) {
-      try {
-        const timeStr = now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: TZ });
-        clockEl.innerHTML = timeStr;
-      } catch(e) {
-        clockEl.innerHTML = toBanglaDigits(now.getHours()) + ':' + toBanglaDigits(now.getMinutes()) + ':' + toBanglaDigits(now.getSeconds());
+      function arabicHijriToBanglaStr(nowDt){
+        let hijri = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {day:"numeric",month:"long",year:"numeric"}).format(nowDt);
+        const arNumMap={ "٠":"০","١":"১","٢":"২","٣":"৩","٤":"৪","٥":"৫","٦":"৬","٧":"৭","٨":"৮","٩":"৯" };
+        hijri=hijri.replace(/[٠-٩]/g,d=>arNumMap[d]);
+        const monthMap={"محرم":"মুহররম","صفر":"সফর","ربيع الأول":"রবিউল আউয়াল","ربيع الآخر":"রবিউস সানি","جمادى الأولى":"জমাদিউল আউয়াল","جمادى الآخرة":"জমাদিউস সানি","رجب":"রজব","شعبان":"শাবান","رمضان":"রমজান","شوال":"শাওয়াল","ذو القعدة":"জিলকদ","ذو الحجة":"জিলহজ"};
+        for(const ar in monthMap) hijri=hijri.replace(ar,monthMap[ar]);
+        return hijri;
       }
-    }
 
-    // বাংলা তারিখ
-    const bnEl = document.getElementById('bangla-date');
-    if (bnEl) {
-      const b = computeBanglaDate(now);
-      bnEl.innerHTML = b.pretty;
-    }
+      function updateAll(){
+        const now=toTZDate(new Date());
 
-    // ইংরেজি তারিখ (Gregorian)
-    const enEl = document.getElementById('english-date');
-    if (enEl) {
-      enEl.innerHTML = now.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: TZ });
-    }
+        // Clock
+       // Clock
+const clockEl=document.getElementById('clock');
+let hours=now.getHours();
+const minutes=now.getMinutes();
+const seconds=now.getSeconds();
+const ampm = hours>=12 ? "PM" : "AM";
+hours = hours % 12;
+hours = hours ? hours : 12; // 0 হলে 12 দেখাবে
+const timeStr=toBanglaDigits(hours)+":"+
+              toBanglaDigits(String(minutes).padStart(2,'0'))+":"+
+              toBanglaDigits(String(seconds).padStart(2,'0'))+
+              " "+ampm;
+if(clockEl.innerHTML!==timeStr) clockEl.innerHTML=timeStr;
 
-    // হিজরি (বাংলায় রূপান্তর)
-    const arEl = document.getElementById('arabic-date');
-    if (arEl) {
-      arEl.innerHTML = arabicHijriToBanglaStr(now);
-    }
+        // Bangla Date
+        const bnEl=document.getElementById('bangla-date');
+        const b=computeBanglaDate(now);
+        if(bnEl.innerHTML!==b.pretty) bnEl.innerHTML=b.pretty;
 
-    // সপ্তাহের দিন (বাংলায়)
-    const wdEl = document.getElementById('weekday');
-    if (wdEl) {
-      try {
-        wdEl.innerHTML = now.toLocaleDateString('bn-BD', { weekday: 'long', timeZone: TZ });
-      } catch(e) {
-        // fallback
-        const enWeek = now.toLocaleDateString('en-GB', { weekday: 'long', timeZone: TZ });
-        // small map
-        const wk = {
-          'Saturday':'শনিবার','Sunday':'রবিবার','Monday':'সোমবার','Tuesday':'মঙ্গলবার',
-          'Wednesday':'বুধবার','Thursday':'বৃহস্পতিবার','Friday':'শুক্রবার'
-        };
-        wdEl.innerHTML = wk[enWeek] || enWeek;
+        // English Date
+        const enEl=document.getElementById('english-date');
+        const enDateStr=now.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric',timeZone:TZ});
+        if(enEl.innerHTML!==enDateStr) enEl.innerHTML=enDateStr;
+
+        // Hijri
+        const hijriEl=document.getElementById('hijri-bn');
+        const hijriStr=arabicHijriToBanglaStr(now);
+        if(hijriEl.innerHTML!==hijriStr) hijriEl.innerHTML=hijriStr;
+
+        // Weekday
+        const wdEl=document.getElementById('weekday');
+        const weekdayStr=now.toLocaleDateString('bn-BD',{weekday:'long',timeZone:TZ});
+        if(wdEl.innerHTML!==weekdayStr) wdEl.innerHTML=weekdayStr;
       }
-    }
-  }
 
-  // প্রথমবার কল ও interval
-  updateAll();
-  setInterval(updateAll, 1000);
-
-  // expose small helper যদি আপনি console-এ কল করতে চান
-  window.getBanglaDate = function(){ return computeBanglaDate(toTZDate(new Date())).pretty; };
-
-})();
-</script>
+      updateAll();
+      setInterval(updateAll,1000);
+    })();
+  </script>
 
 </body>
 </html>

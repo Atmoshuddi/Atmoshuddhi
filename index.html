@@ -78,10 +78,30 @@
       .icon { display: block; }
       .nav-links a { text-align: left; padding: 12px 20px; margin: 2px 0; }
     }
+    .date-time-bar {
+  text-align: center;
+  padding: 8px;
+  font-size: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  border-bottom: 2px solid #2a9d8f;
+
+  /* নতুন স্টাইল */
+  background: linear-gradient(to right, #a8e6cf, #dcedc1);
+  color: #264653;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.date-time-bar span { 
+  margin: 0 10px; 
+  font-weight: bold;
+}
+
 
     /* Login Modal */
     .modal {
-      display: none; /* Hidden by default */
+      display: none;
       position: fixed;
       z-index: 1000;
       left: 0; top: 0;
@@ -116,10 +136,33 @@
     }
     .modal-content button:hover { background: #21867a; }
     .close { float: right; cursor: pointer; color: red; font-weight: bold; }
+
+    /* Clock + Date Bar */
+    .date-time-bar {
+      text-align: center;
+      background: #ffffffee;
+      padding: 8px;
+      font-size: 1rem;
+      border-bottom: 2px solid #2a9d8f;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+    }
+    .date-time-bar span { margin: 0 8px; font-weight: bold; color: #264653; }
   </style>
 </head>
 <body>
   <div class="background"></div>
+
+  <!-- Date-Time Bar -->
+  <div class="date-time-bar">
+    ⏰ <span id="clock"></span> |
+    📅 <span id="bangla-date"></span> |
+    <span id="english-date"></span> |
+    <span id="hijri-bn"></span> |
+    <span id="weekday"></span>
+  </div>
+
   <h1>আত্মশুদ্ধি</h1>
 
   <div class="marquee">
@@ -199,5 +242,226 @@
         .catch((error) => { msg.style.color = "red"; msg.textContent = "❌ " + error.message; });
     }
   </script>
+
+  <!-- Date & Time Script -->
+  <div id="clock"></div>
+<div id="english-date"></div>
+<div id="weekday"></div>
+
+<script>
+  function updateDateTime() {
+    let now = new Date();
+
+    // ঘড়ি (বাংলা সংখ্যায়)
+    let timeOptions = { timeZone: "Asia/Dhaka", hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    document.getElementById("clock").innerHTML = now.toLocaleTimeString("bn-BD", timeOptions);
+
+    // ইংরেজি তারিখ
+    let enOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById("english-date").innerHTML = now.toLocaleDateString("en-GB", enOptions);
+
+    // বার (বাংলায়)
+    let weekday = now.toLocaleDateString("bn-BD", { weekday: 'long' });
+    document.getElementById("weekday").innerHTML = weekday;
+  }
+
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
+</script>
+
+<div id="hijri-bn"></div>
+
+<script>
+  function convertHijriToBangla() {
+    let now = new Date();
+    let hijri = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }).format(now);
+
+    // আরবি সংখ্যা → বাংলা সংখ্যা
+    const numMap = { "٠":"০","١":"১","٢":"২","٣":"৩","٤":"৪","٥":"৫","٦":"৬","٧":"৭","٨":"৮","٩":"৯" };
+    hijri = hijri.replace(/[٠-٩]/g, d => numMap[d]);
+
+    // আরবি মাস → বাংলা মাস
+    const monthMap = {
+      "محرم": "মুহররম",
+      "صفر": "সফর",
+      "ربيع الأول": "রবিউল আউয়াল",
+      "ربيع الآخر": "রবিউস সানি",
+      "جمادى الأولى": "জমাদিউল আউয়াল",
+      "جمادى الآخرة": "জমাদিউস সানি",
+      "رجب": "রজব",
+      "شعبان": "শাবান",
+      "رمضان": "রমজান",
+      "شوال": "শাওয়াল",
+      "ذو القعدة": "জিলকদ",
+      "ذو الحجة": "জিলহজ"
+    };
+    for (let ar in monthMap) {
+      hijri = hijri.replace(ar, monthMap[ar]);
+    }
+
+    document.getElementById("hijri-bn").innerHTML = hijri;
+  }
+
+  convertHijriToBangla();
+</script>
+<!-- --- নিচের স্ক্রিপ্টটি পেস্ট করুন (bangla-date auto) --- -->
+<script>
+(function(){
+  const TZ = 'Asia/Dhaka';
+
+  // Dhaka টাইমজোন অনুযায়ী Date তৈরি করার হেল্পার
+  function toTZDate(d){
+    return new Date(d.toLocaleString('en-US', { timeZone: TZ }));
+  }
+
+  function isLeapYear(y){
+    return (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0));
+  }
+
+  // বাংলা সংখ্যা কনভার্টার
+  function toBanglaDigits(s){
+    return String(s).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+  }
+
+  // বাংলা মাসের নাম
+  const bnMonths = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+
+  // প্রধান ফাংশন: গ্রেগরিয়ান -> বাংলা তারিখ (বাংলাদেশ স্টাইল, Pohela Boishakh = 14 April)
+  function computeBanglaDate(nowDt){
+    // nowDt should already be Dhaka local date object
+    // নির্ধারণ কোন Gregorian বছর থেকে বাংলা বছর শুরু হয়েছে
+    let startGreg = nowDt.getFullYear();
+    if (nowDt.getMonth() < 3 || (nowDt.getMonth() === 3 && nowDt.getDate() < 14)) {
+      startGreg = startGreg - 1;
+    }
+    // বাংলা বছর শুরু (Pohela Boishakh) = startGreg-04-14
+    const startDate = new Date(startGreg, 3, 14); // note: month index 3 = April
+    // days difference (ব্যবহার করছি শুধুই দিন পার্থক্য)
+    const oneDay = 24 * 60 * 60 * 1000;
+    // make both comparable in local (we already built nowDt using toTZDate, and startDate uses local YMD - this works reliably for typical setups)
+    const diffDays = Math.floor((toTZDate(nowDt) - toTZDate(startDate)) / oneDay);
+    const falgunLen = isLeapYear(startGreg + 1) ? 30 : 29; // Falgun দীর্ঘ হয় যদি পরের গ্রেগরিয়ান বছর লিপ ইয়ার হয় (Feb-এ extra day)
+    const monthLens = [31,31,31,31,31,30,30,30,30,30,falgunLen,31];
+
+    let rem = diffDays;
+    let m = 0;
+    while (rem >= monthLens[m]) {
+      rem -= monthLens[m];
+      m++;
+      if (m > 11) break;
+    }
+    const day = rem + 1;
+    const banglaYear = startGreg - 593; // bangla year calculation (startYear - 593)
+
+    return {
+      day: day,
+      monthIndex: m,
+      monthName: bnMonths[m],
+      year: banglaYear,
+      pretty: `${toBanglaDigits(day)} ${bnMonths[m]} ${toBanglaDigits(banglaYear)}`
+    };
+  }
+
+  // হিজরি (Arabic) -> বাংলা কনভার্ট: আরবি সংখ্যা বাংলা সংখ্যায়, মাস নাম বাংলা
+  function arabicHijriToBanglaStr(nowDt){
+    try {
+      let hijri = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }).format(nowDt);
+
+      const arNumMap = { "٠":"০","١":"১","٢":"২","٣":"৩","٤":"৪","٥":"৫","٦":"৬","٧":"৭","٨":"৮","٩":"৯" };
+      hijri = hijri.replace(/[٠-٩]/g, d => arNumMap[d]);
+
+      const monthMap = {
+        "محرم": "মুহররম",
+        "صفر": "সফর",
+        "ربيع الأول": "রবিউল আউয়াল",
+        "ربيع الآخر": "রবিউস সানি",
+        "جمادى الأولى": "জমাদিউল আউয়াল",
+        "جمادى الآخرة": "জমাদিউস সানি",
+        "رجب": "রজব",
+        "شعبان": "শাবান",
+        "رمضان": "রমজান",
+        "شوال": "শাওয়াল",
+        "ذو القعدة": "জিলকদ",
+        "ذو الحجة": "জিলহজ"
+      };
+      for (const ar in monthMap) {
+        hijri = hijri.replace(ar, monthMap[ar]);
+      }
+      return hijri;
+    } catch (e) {
+      return "⚠️ সমর্থিত না";
+    }
+  }
+
+  // মূল আপডেটার (উপাদানগুলোর ID অনুযায়ী ভরাট করে)
+  function updateAll(){
+    const now = toTZDate(new Date());
+
+    // Clock (বাংলা সংখ্যায়)
+    const clockEl = document.getElementById('clock');
+    if (clockEl) {
+      try {
+        const timeStr = now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: TZ });
+        clockEl.innerHTML = timeStr;
+      } catch(e) {
+        clockEl.innerHTML = toBanglaDigits(now.getHours()) + ':' + toBanglaDigits(now.getMinutes()) + ':' + toBanglaDigits(now.getSeconds());
+      }
+    }
+
+    // বাংলা তারিখ
+    const bnEl = document.getElementById('bangla-date');
+    if (bnEl) {
+      const b = computeBanglaDate(now);
+      bnEl.innerHTML = b.pretty;
+    }
+
+    // ইংরেজি তারিখ (Gregorian)
+    const enEl = document.getElementById('english-date');
+    if (enEl) {
+      enEl.innerHTML = now.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: TZ });
+    }
+
+    // হিজরি (বাংলায় রূপান্তর)
+    const arEl = document.getElementById('arabic-date');
+    if (arEl) {
+      arEl.innerHTML = arabicHijriToBanglaStr(now);
+    }
+
+    // সপ্তাহের দিন (বাংলায়)
+    const wdEl = document.getElementById('weekday');
+    if (wdEl) {
+      try {
+        wdEl.innerHTML = now.toLocaleDateString('bn-BD', { weekday: 'long', timeZone: TZ });
+      } catch(e) {
+        // fallback
+        const enWeek = now.toLocaleDateString('en-GB', { weekday: 'long', timeZone: TZ });
+        // small map
+        const wk = {
+          'Saturday':'শনিবার','Sunday':'রবিবার','Monday':'সোমবার','Tuesday':'মঙ্গলবার',
+          'Wednesday':'বুধবার','Thursday':'বৃহস্পতিবার','Friday':'শুক্রবার'
+        };
+        wdEl.innerHTML = wk[enWeek] || enWeek;
+      }
+    }
+  }
+
+  // প্রথমবার কল ও interval
+  updateAll();
+  setInterval(updateAll, 1000);
+
+  // expose small helper যদি আপনি console-এ কল করতে চান
+  window.getBanglaDate = function(){ return computeBanglaDate(toTZDate(new Date())).pretty; };
+
+})();
+</script>
+
 </body>
 </html>

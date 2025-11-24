@@ -7,7 +7,7 @@
 <link rel="icon" href="favicon.png" sizes="180x180">
 <style>
   #homeBtn {
-      position: static;
+      position: absolute;
       top: 20px;
       right: 20px;
       background: #e76f51;
@@ -21,7 +21,6 @@
       transition: all 0.3s ease;
       z-index: 100;
     }
-    
     #homeBtn:hover {
       background: #d6543a;
       transform: translateY(-2px);
@@ -45,7 +44,7 @@
 </head>
 <body>
 
-<h3 ‍ >সদস্যবৃন্দ</h3>
+<h3>সদস্যবৃন্দ</h3>
 <button id="homeBtn" onclick="window.location.href='index.html'">Home Page</button>
 <ul id="memberList">
   <li><button data-email="nahidul@example.com" data-name="Nahidul Islam Shahin" onclick="openLogin(this)">Nahidul Islam Shahin</button></li>

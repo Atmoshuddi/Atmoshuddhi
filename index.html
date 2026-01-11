@@ -6,17 +6,45 @@
   <link rel="icon" sizes="180x180" type="image/png" href="favicon.png">
   <title>আত্মশুদ্ধি</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(to bottom, #a8e6cf, #dcedc1);
-      min-height: 100vh;
-    }
+   body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #0b1d3a 0%, #02030a 60%);
+  perspective: 1000px;
+}
+
+/* Star field */
+.stars {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 30% 80%, #fff, transparent),
+    radial-gradient(2px 2px at 70% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 90% 10%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 50% 60%, #fff, transparent);
+  background-size: 300px 300px;
+  animation: starsFloat 80s linear infinite;
+  transform: translateZ(-600px);
+}
+
+
+@keyframes breathe {
+  0% { transform: translate(-50%, -50%) translateZ(100px) scale(1); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) translateZ(150px) scale(1.2); opacity: 1; }
+}
+
+@keyframes starsFloat {
+  from { background-position: 0 0; }
+  to { background-position: 600px 600px; }
+}
+
     #homeBtn {
       position: absolute;
       top: 20px;
       right: 20px;
-      background: #e76f51;
+      background: #fff2ee;
       color: white;
       border: none;
       padding: 10px 18px;
@@ -28,7 +56,7 @@
       z-index: 100;
     }
     #homeBtn:hover {
-      background: #d6543a;
+      background: #496c10;
       transform: translateY(-2px);
     }
    .date-time-bar {
@@ -36,15 +64,15 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 1px;
   padding: 8px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   position: sticky;
   top: 0;
   z-index: 2000;
   border-bottom: 2px solid #2a9d8f;
-  background: linear-gradient(to right, #a8e6cf, #dcedc1);
-  color: #51009d;
+  background: linear-gradient(to right, #124c37, #8ba55f);
+  color: #fcfcfc;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   font-family: monospace;
@@ -90,7 +118,7 @@
 }
 
 
-    .background {
+   /* .background {
       background-image: url('favicon.png');
       background-size: 200px 200px;
       background-repeat: no-repeat;
@@ -99,7 +127,7 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       z-index: -1;
-    }
+    }*/
 
     h1 {
       font-size: 3rem;
@@ -113,7 +141,7 @@
       overflow: hidden;
       white-space: nowrap;
       font-size: 1.5rem;
-      color: #264653;
+      color: #d1ffe4;
       margin: 20px 0;
     }
     .marquee span {
@@ -129,7 +157,7 @@
     }
 
     .topnav {
-      background-color: #ddf9cccc;
+      background-color: #404b3acc;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -141,7 +169,7 @@
     }
     .nav-links { display: flex; flex-wrap: wrap; }
     .nav-links a {
-      color: #660707;
+      color: #d3ffad;
       text-align: center;
       
       padding: 12px 18px;
@@ -209,9 +237,13 @@
     <span id="hijri-bn"></span> | 
     <span id="weekday"></span>
   </div>
+<div class="stars"></div>
+
+
 
   <button id="loginBtn" onclick="openLogin()">Login</button>
 </div>
+<div class="meditation-light"></div>
 
 
 <div class="clock-bar">
@@ -248,15 +280,15 @@
 
   <!-- Firebase SDK -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyC63JYlboedK6hE_u4ubAT0Nm2PIo-ygQk",
       authDomain: "atmoshuddi.firebaseapp.com",
       projectId: "atmoshuddi",
-      storageBucket: "atmoshuddi.firebasestorage.app",
+      storageBucket: "atmoshuddi.appspot.com", 
       messagingSenderId: "540869594984",
       appId: "1:540869594984:web:667a69b95b6edd983ed0dd",
       measurementId: "G-X9HQ1DN4P7"
@@ -298,81 +330,162 @@
   </script>
 
   <!-- Date & Time Script -->
-  <script>
-    (function(){
-      const TZ = 'Asia/Dhaka';
+ <script>
+(function(){
+  const TZ = 'Asia/Dhaka';
+  const bnMonths = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+  const oneDay = 24 * 60 * 60 * 1000;
+  const DEBUG = false; // true করলে কনসোলে বিস্তারিত দেখাবে
 
-      function toTZDate(d){ return new Date(d.toLocaleString('en-US', { timeZone: TZ })); }
-      function isLeapYear(y){ return (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0)); }
-      function toBanglaDigits(s){ return String(s).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]); }
-      const bnMonths = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+  function toBanglaDigits(s){
+    return String(s).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+  }
 
-      function computeBanglaDate(nowDt){
-        let startGreg = nowDt.getFullYear();
-        if(nowDt.getMonth() < 3 || (nowDt.getMonth()===3 && nowDt.getDate()<14)) startGreg--;
-        const startDate = new Date(startGreg, 3, 14);
-        const oneDay = 24*60*60*1000;
-        const diffDays = Math.floor((toTZDate(nowDt)-toTZDate(startDate))/oneDay);
-        const falgunLen = isLeapYear(startGreg+1)?30:29;
-        const monthLens = [31,31,31,31,31,30,30,30,30,30,falgunLen,31];
-        let rem=diffDays, m=0;
-        while(rem>=monthLens[m]){ rem-=monthLens[m]; m++; if(m>11) break; }
-        const day=rem+1, year=startGreg-593;
-        return { day, monthName: bnMonths[m], year, pretty:`${toBanglaDigits(day)} ${bnMonths[m]} ${toBanglaDigits(year)}` };
-      }
+  // Get Dhaka local date parts reliably
+  function dhakaLocalDate(){
+    const now = new Date();
+    try {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: TZ,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).formatToParts(now);
 
-      function arabicHijriToBanglaStr(nowDt){
-        let hijri = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {day:"numeric",month:"long",year:"numeric"}).format(nowDt);
-        const arNumMap={ "٠":"০","١":"১","٢":"২","٣":"৩","٤":"৪","٥":"৫","٦":"৬","٧":"৭","٨":"৮","٩":"৯" };
-        hijri=hijri.replace(/[٠-٩]/g,d=>arNumMap[d]);
-        const monthMap={"محرم":"মুহররম","صفر":"সফর","ربيع الأول":"রবিউল আউয়াল","ربيع الآخر":"রবিউস সানি","جمادى الأولى":"জমাদিউল আউয়াল","جمادى الآخرة":"জমাদিউস সানি","رجب":"রজব","شعبان":"শাবান","رمضان":"রমজান","شوال":"শাওয়াল","ذو القعدة":"জিলকদ","ذو الحجة":"জিলহজ"};
-        for(const ar in monthMap) hijri=hijri.replace(ar,monthMap[ar]);
-        return hijri;
-      }
+      const y = +parts.find(p => p.type === 'year').value;
+      const m = +parts.find(p => p.type === 'month').value - 1;
+      const d = +parts.find(p => p.type === 'day').value;
+      return { y, m, d, jsDate: new Date(y, m, d) };
+    } catch (e) {
+      // fallback: use toLocaleString and parse — less ideal but used if formatToParts unavailable
+      const s = now.toLocaleString('en-CA', { timeZone: TZ });
+      const [ymd] = s.split(',');
+      const [yy, mm, dd] = ymd.trim().split('-').map(Number);
+      return { y: yy, m: mm - 1, d: dd, jsDate: new Date(yy, mm-1, dd) };
+    }
+  }
 
-      function updateAll(){
-        const now=toTZDate(new Date());
+  function isLeapYear(y){
+    return (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0));
+  }
 
-        // Clock
-       // Clock
-/*const clockEl=document.getElementById('clock');
-let hours=now.getHours();
-const minutes=now.getMinutes();
-const seconds=now.getSeconds();
-const ampm = hours>=12 ? "PM" : "AM";
-hours = hours % 12;
-hours = hours ? hours : 12; // 0 হলে 12 দেখাবে
-const timeStr=toBanglaDigits(hours)+":"+
-              toBanglaDigits(String(minutes).padStart(2,'0'))+":"+
-              toBanglaDigits(String(seconds).padStart(2,'0'))+
-              " "+ampm;
-if(clockEl.innerHTML!==timeStr) clockEl.innerHTML=timeStr;
-*/
-        // Bangla Date
-        const bnEl=document.getElementById('bangla-date');
-        const b=computeBanglaDate(now);
-        if(bnEl.innerHTML!==b.pretty) bnEl.innerHTML=b.pretty;
+  // Robust computation with safeguards
+  function computeBanglaDateObject(dhakaDate){
+    // dhakaDate is a JS Date at local Dhaka midnight (y,m,d)
+    const year = dhakaDate.getFullYear();
+    const month = dhakaDate.getMonth();
+    const date = dhakaDate.getDate();
 
-        // English Date
-        const enEl=document.getElementById('english-date');
-        const enDateStr=now.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric',timeZone:TZ});
-        if(enEl.innerHTML!==enDateStr) enEl.innerHTML=enDateStr;
+    // startGreg = Gregorian year that contains Bangla year start (14 Apr)
+    let startGreg = year;
+    if (month < 3 || (month === 3 && date <= 14)) startGreg--;
 
-        // Hijri
-        const hijriEl=document.getElementById('hijri-bn');
-        const hijriStr=arabicHijriToBanglaStr(now);
-        if(hijriEl.innerHTML!==hijriStr) hijriEl.innerHTML=hijriStr;
+    // Use UTC midnights to avoid time-of-day shifts
+    const nowUTCmid = Date.UTC(dhakaDate.getFullYear(), dhakaDate.getMonth(), dhakaDate.getDate());
+    let startUTCmid = Date.UTC(startGreg, 3, 15);
+    let diffDays = Math.floor((nowUTCmid - startUTCmid) / oneDay);
 
-        // Weekday
-        const wdEl=document.getElementById('weekday');
-        const weekdayStr=now.toLocaleDateString('bn-BD',{weekday:'long',timeZone:TZ});
-        if(wdEl.innerHTML!==weekdayStr) wdEl.innerHTML=weekdayStr;
-      }
+    // If negative, adjust (safety)
+    if (diffDays < 0) {
+      startGreg = startGreg - 1;
+      startUTCmid = Date.UTC(startGreg, 3, 14);
+      diffDays = Math.floor((nowUTCmid - startUTCmid) / oneDay);
+    }
 
-      updateAll();
-      setInterval(updateAll,1000);
-    })();
-  </script>
+    const falgunLen = isLeapYear(startGreg + 1) ? 30 : 29;
+    const monthLens = [31,31,31,31,31,30,30,30,30,30,falgunLen,31];
+
+    // If diffDays extremely large or small, normalize into 0..(yearDays-1)
+    const yearLen = monthLens.reduce((a,b)=>a+b,0);
+    let rem = diffDays % yearLen;
+    if (rem < 0) rem += yearLen;
+
+    let m = 0;
+    while (m < 12 && rem >= monthLens[m]) {
+      rem -= monthLens[m];
+      m++;
+    }
+    if (m >= 12) { m = 11; } // safety
+
+    const bDay = rem + 1;
+    const bMonth = bnMonths[m];
+    const bYear = startGreg - 593;
+
+    return {
+      startGreg,
+      diffDays,
+      monthLens,
+      rem,
+      m,
+      bDay,
+      bMonth,
+      bYear,
+      pretty: `${toBanglaDigits(bDay)} ${bMonth} ${toBanglaDigits(bYear)}`
+    };
+  }
+
+  // Hijri -> Bangla mapping (keeps same as before)
+  function arabicHijriToBanglaStr(dhakaDate){
+    let hijri;
+    try {
+      hijri = new Intl.DateTimeFormat("ar-TN-u-ca-islamic-umalqura", {
+        day: "numeric", month: "long", year: "numeric"
+      }).format(dhakaDate);
+    } catch(e) {
+      hijri = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {
+        day: "numeric", month: "long", year: "numeric"
+      }).format(dhakaDate);
+    }
+
+    const numMap = {
+      "0":"০","1":"১","2":"২","3":"৩","4":"৪","5":"৫","6":"৬","7":"৭","8":"৮","9":"৯",
+      "٠":"০","١":"১","٢":"২","٣":"৩","٤":"৪","٥":"৫","٦":"৬","٧":"৭","٨":"৮","٩":"৯",
+      "۰":"০","۱":"১","۲":"২","۳":"৩","۴":"৪","۵":"৫","۶":"৬","۷":"৭","۸":"৮","۹":"৯"
+    };
+    hijri = hijri.replace(/[0-9٠-٩۰-۹]/g, d => numMap[d]);
+
+    const monthMap = {
+      "محرم":"মুহররম","صفر":"সফর","ربيع الأول":"রবিউল আউয়াল","ربيع الآخر":"রবিউস সানি",
+      "جمادى الأولى":"জমাদিউল আউয়াল","جمادى الآخرة":"জমাদিউস সানি","رجب":"রজব","شعبان":"শাবান",
+      "رمضان":"রমজান","شوال":"শাওয়াল","ذو القعدة":"জিলকদ","ذو الحجة":"জিলহজ"
+    };
+    for (const ar in monthMap) hijri = hijri.replace(ar, monthMap[ar]);
+
+    return hijri;
+  }
+
+  function updateAll(){
+    const parts = dhakaLocalDate();
+    const dhakaDate = parts.jsDate; // local midnight date in Dhaka
+    const bnEl = document.getElementById('bangla-date');
+    const enEl = document.getElementById('english-date');
+    const hijriEl = document.getElementById('hijri-bn');
+    const wdEl = document.getElementById('weekday');
+
+    const result = computeBanglaDateObject(dhakaDate);
+    if (bnEl) bnEl.innerHTML = result.pretty;
+    if (enEl) enEl.innerHTML = dhakaDate.toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' });
+    if (hijriEl) hijriEl.innerHTML = arabicHijriToBanglaStr(dhakaDate);
+    if (wdEl) wdEl.innerHTML = dhakaDate.toLocaleDateString('bn-BD', { weekday: 'long' });
+
+    if (DEBUG) {
+      console.log('--- Dhaka date parts ---');
+      console.log('parts:', parts);
+      console.log('computed:', result);
+      console.log('dhakaDate (ISO):', dhakaDate.toISOString());
+      console.log('startGreg:', result.startGreg);
+      console.log('diffDays:', result.diffDays);
+      console.log('monthLens:', result.monthLens);
+      console.log('rem:', result.rem, 'm:', result.m);
+      console.log('Bangla:', result.pretty);
+    }
+  }
+
+  updateAll();
+})();
+</script>
+
+
 
 </body>
 </html>

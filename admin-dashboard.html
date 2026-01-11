@@ -15,7 +15,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyC63JYlboedK6hE_u4ubAT0Nm2PIo-ygQk",
   authDomain: "atmoshuddi.firebaseapp.com",
   projectId: "atmoshuddi",
-  storageBucket: "atmoshuddi.firebasestorage.app",
+  storageBucket: "atmoshuddi.appspot.com", 
   messagingSenderId: "540869594984",
   appId: "1:540869594984:web:667a69b95b6edd983ed0dd",
   measurementId: "G-X9HQ1DN4P7"
@@ -183,6 +183,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
   document.getElementById("month").value="";
   document.getElementById("amount").value="";
   memberSelect.dispatchEvent(new Event("change")); // refresh table
+  alert("✅ নতুন ডাটা সেভ হয়েছে!");
 });
 
 // নতুন ক্রম Firestore এ সেভ
@@ -223,6 +224,7 @@ tr.dragging {opacity:0.5;background:#ffe0b3;}
 <body>
 <header>
 <h1>এডমিন ড্যাশবোর্ড</h1>
+<button id="excelfile" onclick="window.location.href='https://1drv.ms/f/c/920544377a6755f3/ElmgEem2iq1BpS8iaCmu2MABuZRphS_LzTgV5zJVrUOA4w'">এক্সেল ফাইল</button>
 <button id="logoutBtn">লগআউট</button>
 </header>
 

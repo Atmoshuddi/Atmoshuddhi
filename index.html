@@ -394,7 +394,7 @@
     }
 
     const falgunLen = isLeapYear(startGreg + 1) ? 30 : 29;
-    const monthLens = [31,31,31,31,31,30,30,30,30,30,falgunLen,31];
+    const monthLens = [31,31,31,31,31,31,30,30,30,30,falgunLen,30];
 
     // If diffDays extremely large or small, normalize into 0..(yearDays-1)
     const yearLen = monthLens.reduce((a,b)=>a+b,0);
